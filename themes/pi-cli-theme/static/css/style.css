@@ -1,0 +1,430 @@
+/* ============================================================
+   pi-cli-theme — a Hugo theme that looks like a Jy terminal session
+   Palettes: pi's built-in "dark" and "light" themes (okhsl → sRGB)
+   Brand:    Jy pixel logo (coral / blue / yellow, fixed across themes)
+   Theme switch: html[data-theme="dark"] | html[data-theme="light"]
+   ============================================================ */
+
+:root,
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* surfaces (pi dark: export.pageBg / cardBg / blueBg / toolPendingBg) */
+  --bg: #21252c;
+  --bg-card: #282c34;
+  --bg-blue: #213b49;
+  --bg-pending: #34383a;
+  --bg-success: #254131;
+  --bg-error: #5b282a;
+
+  /* text roles */
+  --text: #dee0e1;
+  --muted: #9da5a9;
+  --dim: #7e888e;
+
+  /* accents (pi dark) */
+  --accent: #a798d7;          /* violet   */
+  --border-accent: #a08ed5;
+  --blue: #69add0;
+  --green: #68b78d;
+  --red: #ea7f81;
+  --yellow: #cd9a22;
+  --border: #768186;          /* borderMuted */
+  --border-faint: #34383a;
+  --panel-border: rgba(159, 199, 218, 0.14);
+  --zebra: rgba(40, 44, 52, 0.5);
+
+  /* scrollbars (pi dark) */
+  --scrollbar-thumb: #484e52;
+  --scrollbar-thumb-hover: #768186;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+
+  /* surfaces (pi light: export.pageBg / cardBg / blueBg / toolPendingBg) */
+  --bg: #efeeee;
+  --bg-card: #f7f6f6;
+  --bg-blue: #dfe7ec;
+  --bg-pending: #e4e5e6;
+  --bg-success: #dee9e1;
+  --bg-error: #eee2e1;
+
+  /* text roles */
+  --text: #3b3f41;
+  --muted: #677176;
+  --dim: #879095;
+
+  /* accents (pi light) */
+  --accent: #7459b4;          /* violet   */
+  --border-accent: #8a72cb;
+  --blue: #2f7899;
+  --green: #337e58;
+  --red: #c8253d;
+  --yellow: #8f6802;
+  --border: #9aa2a7;          /* borderMuted */
+  --border-faint: #dddcd9;
+  --panel-border: rgba(63, 81, 92, 0.16);
+  --zebra: rgba(0, 0, 0, 0.035);
+
+  /* scrollbars (pi light) */
+  --scrollbar-thumb: #e1e3e4;
+  --scrollbar-thumb-hover: #96a0a4;
+}
+
+:root {
+  /* Jy brand (fixed across themes): J = coral + blue, y = yellow */
+  --coral: #e48a7a;
+  --pi-blue: #4f8eb3;
+  --pi-yellow: #eab65d;
+
+  --mono: "JetBrains Mono", "Cascadia Code", "Fira Code", ui-monospace,
+          "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { scrollbar-color: var(--scrollbar-thumb) var(--bg); }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 1.65;
+  padding-bottom: 4.5rem; /* room for the status bar */
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+::selection { background: var(--bg-blue); color: var(--text); }
+
+/* thin terminal-style scrollbars (WebKit) */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ------------------------------------------------------------
+   header — session bar + nav
+   ------------------------------------------------------------ */
+
+.site-header {
+  max-width: 88ch;
+  margin: 0 auto;
+  padding: 1.4rem 1.5rem 0.9rem;
+  border-bottom: 1px solid var(--border-faint);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 2rem;
+}
+
+.session { display: flex; align-items: center; gap: 12px; }
+
+/* Jy pixel logo: 7x4 grid — J (coral bar, blue stem+hook), y (yellow) */
+.jy-logo {
+  display: grid;
+  grid-template-columns: repeat(7, 5px);
+  grid-template-rows: repeat(4, 5px);
+}
+.jy-logo i { background: transparent; }
+/* J top bar: C C C */
+.jy-logo i:nth-child(1),
+.jy-logo i:nth-child(2),
+.jy-logo i:nth-child(3) { background: var(--coral); }
+/* J stem + hook: blue */
+.jy-logo i:nth-child(10),
+.jy-logo i:nth-child(17),
+.jy-logo i:nth-child(22),
+.jy-logo i:nth-child(23),
+.jy-logo i:nth-child(24) { background: var(--pi-blue); }
+/* y: yellow (two stems, join, descender) */
+.jy-logo i:nth-child(5),
+.jy-logo i:nth-child(7),
+.jy-logo i:nth-child(12),
+.jy-logo i:nth-child(14),
+.jy-logo i:nth-child(19),
+.jy-logo i:nth-child(20),
+.jy-logo i:nth-child(21),
+.jy-logo i:nth-child(28) { background: var(--pi-yellow); }
+
+.wordmark { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.5px; }
+.wm-1 { color: var(--coral); }
+.wm-2 { color: var(--pi-yellow); }
+.hostname { color: var(--dim); font-weight: 400; margin-left: 8px; font-size: 0.85rem; }
+
+.menu { display: flex; flex-wrap: wrap; gap: 0.2rem 1.1rem; }
+.menu a { color: var(--blue); }
+.menu a::before { content: "\276F "; color: transparent; }
+.menu a:hover, .menu a.active { color: var(--accent); }
+.menu a:hover::before, .menu a.active::before { color: var(--accent); }
+
+/* ------------------------------------------------------------
+   main terminal area
+   ------------------------------------------------------------ */
+
+.terminal {
+  max-width: 88ch;
+  margin: 0 auto;
+  padding: 1.6rem 1.5rem 2rem;
+}
+
+.page-content { margin-bottom: 2rem; }
+
+/* prompt lines */
+.prompt-line { margin: 1.2rem 0 0.6rem; }
+.prompt-line.idle { margin-top: 2rem; }
+.prompt { color: var(--green); }
+.prompt-user { color: var(--green); font-weight: 700; }
+.prompt-host { color: var(--blue); }
+.prompt-path { color: var(--accent); }
+.cmd { color: var(--text); }
+
+.cursor {
+  display: inline-block;
+  color: var(--accent);
+  animation: blink 1.2s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ls -l style listings */
+.file-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.95rem;
+}
+.file-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 14px;
+  padding: 2px 0;
+}
+.file-list .total { padding-bottom: 4px; }
+.perm { color: var(--dim); }
+.fdate { color: var(--blue); }
+.file-list .entry {
+  color: var(--text);
+  flex: 1;
+  min-width: 40%;
+}
+.file-list .entry:hover { color: var(--accent); text-decoration: none; }
+.file-list .entry:hover::before { content: "\276F "; color: var(--accent); }
+.count { margin-left: 4px; }
+
+.page-title {
+  color: var(--yellow);
+  font-size: 1.35rem;
+  margin: 0.4rem 0 0.2rem;
+}
+
+/* ------------------------------------------------------------
+   article
+   ------------------------------------------------------------ */
+
+.panel {
+  background: var(--bg-blue);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 0.9rem 1.2rem;
+  margin: 0.6rem 0 1.6rem;
+}
+
+.article-title { color: var(--yellow); font-size: 1.45rem; margin: 0 0 0.5rem; }
+
+.meta { display: flex; flex-wrap: wrap; gap: 0.2rem 1.4rem; font-size: 0.85rem; }
+.meta-label { color: var(--dim); }
+.meta a { color: var(--blue); }
+
+.post-content { overflow-wrap: break-word; }
+
+.post-content h1, .post-content h2, .post-content h3,
+.post-content h4, .post-content h5, .post-content h6 {
+  color: var(--yellow);            /* pi mdHeading */
+  line-height: 1.35;
+  margin: 1.8rem 0 0.7rem;
+}
+.post-content h1 { font-size: 1.4rem; }
+.post-content h2 { font-size: 1.2rem; }
+.post-content h3 { font-size: 1.05rem; }
+
+.post-content p { margin: 0.7rem 0; }
+
+.post-content a { color: var(--blue); }          /* pi mdLink */
+.post-content a:hover { text-decoration: underline; }
+
+.post-content ul, .post-content ol { padding-left: 1.6rem; }
+.post-content li { margin: 0.25rem 0; }
+.post-content li::marker { color: var(--accent); } /* pi mdListBullet */
+
+.post-content blockquote {                        /* pi mdQuote */
+  margin: 1rem 0;
+  padding: 0.2rem 1rem;
+  border-left: 3px solid var(--border);
+  color: var(--muted);
+}
+.post-content blockquote p { margin: 0.4rem 0; }
+
+.post-content hr {                                /* pi mdHr */
+  border: 0;
+  border-top: 1px solid var(--border-faint);
+  margin: 2rem 0;
+}
+
+.post-content img {
+  max-width: 100%;
+  border: 1px solid var(--border-faint);
+  border-radius: 4px;
+  height: auto;
+}
+
+/* inline code — pi mdCode (violet on card) */
+code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--bg-card);
+  color: var(--accent);
+  border: 1px solid var(--border-faint);
+  border-radius: 4px;
+  padding: 0.08em 0.35em;
+}
+
+/* code blocks — pi mdCodeBlock; bg/border from theme, token colors
+   from syntax.css (chroma classes, scoped per data-theme) */
+.post-content pre,
+.highlight pre {
+  margin: 1rem 0;
+  padding: 0.9rem 1.1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-faint);
+  overflow-x: auto;
+  line-height: 1.55;
+  font-size: 0.88rem;
+}
+.post-content pre code,
+.highlight pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+.highlight { margin: 1rem 0; }
+.highlight pre { margin: 0; }
+
+/* tables */
+.post-content table {
+  border-collapse: collapse;
+  margin: 1.2rem auto;
+  font-size: 0.9rem;
+}
+.post-content th, .post-content td {
+  border: 1px solid var(--border-faint);
+  padding: 0.35rem 0.8rem;
+}
+.post-content th { background: var(--bg-card); color: var(--muted); font-weight: 600; }
+.post-content tr:nth-child(2n) td { background: var(--zebra); }
+
+/* ------------------------------------------------------------
+   404
+   ------------------------------------------------------------ */
+
+.notfound { margin: 2rem 0; }
+.err-name { color: var(--red); margin-bottom: 0.2rem; }
+.err { color: var(--text); margin: 0 0 0.2rem; font-weight: 700; }
+.exit-code { font-size: 0.85rem; margin: 0.2rem 0 1rem; }
+
+/* ------------------------------------------------------------
+   footer + status bar
+   ------------------------------------------------------------ */
+
+.site-footer {
+  max-width: 88ch;
+  margin: 2.5rem auto 0;
+  padding: 1rem 1.5rem;
+  border-top: 1px dashed var(--border-faint);
+  color: var(--dim);
+  font-size: 0.82rem;
+  text-align: center;
+}
+.footer-text a { color: var(--blue); }
+
+.status-bar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 30px;
+  padding: 0 12px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-faint);
+  font-size: 12px;
+  color: var(--dim);
+}
+.status-bar .mode {
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 700;
+  padding: 0 8px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+}
+.status-bar .status-center { flex: 1; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.status-bar .status-right { white-space: nowrap; display: flex; align-items: center; gap: 10px; }
+
+.theme-toggle {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1;
+  background: none;
+  border: 1px solid var(--border-faint);
+  color: var(--dim);
+  padding: 3px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.theme-toggle:hover { color: var(--accent); border-color: var(--border-accent); }
+
+/* ------------------------------------------------------------
+   utilities + misc
+   ------------------------------------------------------------ */
+
+.dim { color: var(--dim); }
+
+kbd {
+  font-family: var(--mono);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0.05em 0.4em;
+  font-size: 0.85em;
+}
+
+@media (max-width: 640px) {
+  body { font-size: 14px; }
+  .site-header { padding: 1.1rem 1rem 0.8rem; }
+  .terminal { padding: 1.2rem 1rem 1.6rem; }
+  .fdate { display: none; }            /* ls -1 on narrow terminals */
+  .file-list .entry { min-width: 0; }
+  .status-bar .status-center { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor { animation: none; }
+  body, .theme-toggle { transition: none; }
+}
+
+@media print {
+  .status-bar, .cursor, .prompt-line.idle { display: none; }
+  body { padding-bottom: 0; background: #fff; color: #000; }
+}

@@ -1,0 +1,11 @@
+{{ define "main" }}
+<div class="prompt-line">{{ partial "prompt.html" . }} <span class="cmd">cd ~/404</span></div>
+
+<div class="notfound">
+  <p class="err"><span class="err-name">jy:</span> command not found</p>
+  <p class="dim exit-code">exit code 127 &mdash; the page you requested does not exist (or has been moved).</p>
+  <p><a href="{{ "/" | relURL }}">&larr; cd ~</a></p>
+</div>
+
+<div class="prompt-line idle">{{ partial "prompt.html" . }} <span class="cursor" aria-hidden="true">&#9608;</span></div>
+{{ end }}

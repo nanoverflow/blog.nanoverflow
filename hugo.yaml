@@ -1,15 +1,14 @@
 baseurl: "https://blog.nanoverflow.com/"  # please update this to your actual URL
 locale: "en-us"
-title: "A minimal Hugo website"
-theme: "hugo-xmin"
+title: "NaNOverflow's blog"
+theme: "pi-cli-theme"
 googleAnalytics: ""
 disqusShortname: ""
-ignoreFiles: ["\\.Rmd$", "\\.Rmarkdown$", "_cache$"]
+ignoreFiles: ["_cache$"]
 footnotereturnlinkcontents: "↩"
 
 permalinks:
-  note: "/note/:year/:month/:day/:slug/"
-  post: "/post/:year/:month/:day/:slug/"
+  post: "/post/:year/:slug/"
 
 menu:
   main:
@@ -35,7 +34,10 @@ security:
 
 markup:
   highlight:
-    codeFences: false
+    codeFences: true
+    style: "onedark" # unused with noClasses:false; token colors come from themes/pi-cli-theme/static/css/syntax.css (dark: onedark, light: github)
+    lineNos: false
+    noClasses: false
   goldmark:
     renderer:
       unsafe: true

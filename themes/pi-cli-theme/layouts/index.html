@@ -1,0 +1,22 @@
+{{ define "main" }}
+{{ with .Content }}
+<div class="page-content">
+{{ . }}
+</div>
+{{ end }}
+
+<div class="prompt-line">{{ partial "prompt.html" . }} <span class="cmd">ls -t</span></div>
+
+<ul class="file-list">
+  <li class="total dim">total {{ len (where .Site.RegularPages "Section" "!=" "") }}</li>
+  {{ range (where .Site.RegularPages "Section" "!=" "") }}
+  <li>
+    <span class="perm" aria-hidden="true">-rw-r--r--</span>
+    <span class="fdate">{{ .Date.Format "2006-01-02" }}</span>
+    <a class="entry" href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
+  </li>
+  {{ end }}
+</ul>
+
+<div class="prompt-line idle">{{ partial "prompt.html" . }} <span class="cursor" aria-hidden="true">&#9608;</span></div>
+{{ end }}

@@ -9,5 +9,3 @@ categories: []
 ---
 
 ## Overview
-
-<!-- jy@nanoverflow:~$ vim this file -->

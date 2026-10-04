@@ -1,0 +1,6 @@
+{{ $host := .Site.Params.promptHost | default "" }}
+{{ if not $host }}
+  {{ $host = (urls.Parse .Site.BaseURL).Host }}
+  {{ $host = replaceRE "^www\\." "" $host }}
+{{ end }}
+{{ $user := .Site.Params.promptUser | default "jy" }}<span class="prompt"><span class="prompt-user">{{ $user }}</span>@<span class="prompt-host">{{ $host }}</span>:<span class="prompt-path">~</span>$</span>

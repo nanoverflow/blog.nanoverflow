@@ -1,0 +1,26 @@
+{{ define "main" }}
+<div class="prompt-line">{{ partial "prompt.html" . }} <span class="cmd">ls {{ with .File }}{{ .Dir }}{{ else }}{{ .Title | lower }}{{ end }}</span></div>
+
+{{ if not .IsHome }}
+<h1 class="page-title">{{ .Title | markdownify }}</h1>
+{{ end }}
+
+{{ with .Content }}
+<div class="page-content">
+{{ . }}
+</div>
+{{ end }}
+
+<ul class="file-list">
+  <li class="total dim">total {{ len .Pages }}</li>
+  {{ range .Pages }}
+  <li>
+    <span class="perm" aria-hidden="true">-rw-r--r--</span>
+    <span class="fdate">{{ .Date.Format "2006-01-02" }}</span>
+    <a class="entry" href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
+  </li>
+  {{ end }}
+</ul>
+
+<div class="prompt-line idle">{{ partial "prompt.html" . }} <span class="cursor" aria-hidden="true">&#9608;</span></div>
+{{ end }}

@@ -1,0 +1,17 @@
+{{ define "main" }}
+<div class="prompt-line">{{ partial "prompt.html" . }} <span class="cmd">ls {{ .Title | lower }}/</span></div>
+
+<h1 class="page-title">{{ .Title | markdownify }}</h1>
+
+<ul class="file-list terms">
+  {{ range .Pages }}
+  <li>
+    <span class="perm" aria-hidden="true">drwxr-xr-x</span>
+    <a class="entry" href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
+    <span class="count dim">({{ len .Pages }})</span>
+  </li>
+  {{ end }}
+</ul>
+
+<div class="prompt-line idle">{{ partial "prompt.html" . }} <span class="cursor" aria-hidden="true">&#9608;</span></div>
+{{ end }}

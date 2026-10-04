@@ -1,0 +1,60 @@
+<footer class="site-footer">
+  {{ partial "foot_custom.html" . }}
+  {{ with .Site.Params.footer }}
+  <div class="footer-text">{{ replace . "{Year}" now.Year | markdownify }}</div>
+  {{ end }}
+</footer>
+
+<div class="status-bar" role="contentinfo">
+  <span class="mode">-- JY --</span>
+  <span class="status-center">{{ .Site.Title }}</span>
+  <span class="status-right">
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="toggle color theme" title="toggle theme (like pi's light/dark)">
+      &#9684; <span id="theme-label">dark</span>
+    </button>
+    <span>UTF-8 &middot; {{ now.Year }} &middot; pi-cli-theme</span>
+  </span>
+</div>
+
+<script>
+(function () {
+  var KEY = 'pi-theme';
+  var root = document.documentElement;
+  var label = document.getElementById('theme-label');
+  var mq = window.matchMedia ? matchMedia('(prefers-color-scheme: light)') : null;
+
+  function stored() {
+    try { return localStorage.getItem(KEY); } catch (e) { return null; }
+  }
+  function current() {
+    var t = root.getAttribute('data-theme');
+    if (t !== 'light' && t !== 'dark') {
+      t = (mq && mq.matches) ? 'light' : 'dark';
+    }
+    return t;
+  }
+  function apply(t) {
+    root.setAttribute('data-theme', t);
+    if (label) { label.textContent = t; }
+  }
+  apply(current());
+
+  var btn = document.getElementById('theme-toggle');
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem(KEY, next); } catch (e) {}
+      apply(next);
+    });
+  }
+
+  /* follow the OS when the user has not picked a theme explicitly (pi auto mode) */
+  function onSystemChange() {
+    if (!stored()) { apply(current()); }
+  }
+  if (mq) {
+    if (mq.addEventListener) { mq.addEventListener('change', onSystemChange); }
+    else if (mq.addListener) { mq.addListener(onSystemChange); }
+  }
+})();
+</script>

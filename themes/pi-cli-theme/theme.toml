@@ -1,0 +1,12 @@
+name = "pi-cli-theme"
+license = "MIT"
+licenselink = "https://github.com/nanoverflow/pi-cli-theme/blob/main/LICENSE"
+description = "A Hugo theme that makes your blog look like a pi coding-agent terminal session — pixel π logo, prompts, ls-style listings, and pi's dark palette."
+homepage = "https://blog.nanoverflow.com/"
+tags = ["terminal", "cli", "dark", "minimal", "monospace", "blog"]
+features = ["terminal-ui", "syntax-highlighting", "responsive"]
+min_version = "0.120.0"
+
+[author]
+  name = "nanoverflow"
+  homepage = "https://blog.nanoverflow.com/"
