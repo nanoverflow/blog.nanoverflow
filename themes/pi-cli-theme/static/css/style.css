@@ -616,7 +616,7 @@ kbd {
   .status-bar { gap: 8px; font-size: 11.5px; }
   .status-bar .status-center { display: none; }
   .status-bar .status-right > span { display: none; }
-  .toc-open { padding: 6px 10px; }  /* bigger touch target */
+  .toc-open, .theme-toggle { padding: 6px 10px; }  /* equal touch targets, equal height */
 }
 
 @media (prefers-reduced-motion: reduce) {
