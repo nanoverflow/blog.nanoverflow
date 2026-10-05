@@ -9,10 +9,13 @@
   <span class="mode">-- JY --</span>
   <span class="status-center">{{ .Site.Title }}</span>
   <span class="status-right">
+    {{ if .Store.Get "hasToc" }}
+    <button class="status-btn toc-open" id="toc-open" type="button" aria-haspopup="dialog" aria-controls="toc-sheet" aria-expanded="false" aria-label="open outline">&#9776; TOC</button>
+    {{ end }}
     <button class="theme-toggle" id="theme-toggle" type="button" aria-label="toggle color theme" title="toggle theme (like pi's light/dark)">
       &#9684; <span id="theme-label">dark</span>
     </button>
-    <span>UTF-8 &middot; {{ now.Year }} &middot; pi-cli-theme</span>
+    <span>UTF-8 &middot; {{ now.Year }}</span>
   </span>
 </div>
 
@@ -36,6 +39,8 @@
   function apply(t) {
     root.setAttribute('data-theme', t);
     if (label) { label.textContent = t; }
+    var mc = document.querySelector('meta[name="theme-color"]');
+    if (mc) { mc.setAttribute('content', t === 'light' ? '#efeeee' : '#21252c'); }
   }
   apply(current());
 

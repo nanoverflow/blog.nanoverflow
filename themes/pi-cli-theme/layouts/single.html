@@ -1,4 +1,8 @@
 {{ define "main" }}
+{{ $toc := .Fragments.ToHTML 1 2 false }}
+{{ $hasToc := findRE "<li" $toc }}
+{{ .Store.Set "hasToc" $hasToc }}{{/* footer(按钮) / overlays / scripts 共用这一个判断 */}}
+
 <div class="prompt-line">{{ partial "prompt.html" . }} <span class="cmd">cat {{ with .File }}{{ .LogicalName }}{{ else }}{{ .Slug | default "post.md" }}{{ end }}</span></div>
 
 <article class="post">
@@ -12,13 +16,48 @@
     </div>
   </header>
 
+  {{ with $hasToc }}
+  <details class="toc-panel">
+    <summary>outline</summary>
+    <nav class="toc">{{ $toc }}</nav>
+  </details>
+  {{ end }}
+
   <div class="post-content">
   {{ .Content }}
   </div>
 </article>
 
+{{ with $hasToc }}
+<aside class="toc-rail" aria-label="outline">
+  <div class="toc-inner">
+    <div class="toc-title">outline</div>
+    <nav class="toc" data-scrollspy>{{ $toc }}</nav>
+  </div>
+</aside>
+{{ end }}
+
 <div class="prompt-line exit">
   {{ partial "prompt.html" . }} <span class="cmd dim">exit 0</span>
   <a class="back" href="{{ "/" | relURL }}"># back to ~</a>
 </div>
+{{ end }}
+
+{{ define "overlays" }}
+{{ with .Store.Get "hasToc" }}
+<div class="toc-sheet-backdrop" id="toc-backdrop"></div>
+<aside class="toc-sheet" id="toc-sheet" role="dialog" aria-modal="true" aria-label="outline">
+  <div class="toc-sheet-head">
+    <span class="toc-title">outline</span>
+    <button class="status-btn" id="toc-close" type="button" aria-label="close outline">&times;</button>
+  </div>
+  <nav class="toc" data-scrollspy>{{ $.Fragments.ToHTML 1 2 false }}</nav>
+</aside>
+{{ end }}
+{{ end }}
+
+{{ define "scripts" }}
+{{ if .Store.Get "hasToc" }}
+<script src="{{ "js/toc.js" | relURL }}" defer></script>
+{{ end }}
 {{ end }}
