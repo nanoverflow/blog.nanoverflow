@@ -16,7 +16,7 @@
   {{ range .Pages }}
   <li>
     <span class="perm" aria-hidden="true">-rw-r--r--</span>
-    <span class="fdate">{{ .Date.Format "2006-01-02" }}</span>
+    <span class="fdate">{{ partial "fdate.html" . }}</span>
     <a class="entry" href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
   </li>
   {{ end }}

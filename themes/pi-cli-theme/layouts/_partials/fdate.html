@@ -1,0 +1,17 @@
+{{- /*
+  Date string for list rows, article meta and the search index.
+
+  date front matter must be a full parseable date (Hugo hard-errors on
+  partial strings like '2026-10', and the /post/:year/ permalink needs it
+  anyway). Optional `date_precision: year | month` renders a coarser label:
+
+    date: 2026-10-01  + date_precision: month  ->  2026-10
+    date: 2026-01-01  + date_precision: year   ->  2026
+    date: 2026-10-03                              ->  2026-10-03
+    no date at all                                ->  ----/--/--
+*/ -}}
+{{- $prec := .Params.date_precision | default "" -}}
+{{- if .Date.IsZero -}}----/--/--
+{{- else if eq $prec "year" -}}{{- .Date.Format "2006" -}}
+{{- else if eq $prec "month" -}}{{- .Date.Format "2006-01" -}}
+{{- else -}}{{- .Date.Format "2006-01-02" -}}{{- end -}}

@@ -61,7 +61,7 @@
   }
 
   function row(doc, matches) {
-    var date = /^0001/.test(doc.date) ? '—' : doc.date;
+    var date = /^(0001|----)/.test(doc.date) ? '----/--/--' : doc.date;
     var html = '<li>'
       + '<span class="perm" aria-hidden="true">-rw-r--r--</span>'
       + '<span class="fdate">' + escapeHtml(date) + '</span>'
@@ -132,6 +132,7 @@
           { name: 'description', weight: 2 },
           { name: 'tags', weight: 2 },
           { name: 'categories', weight: 1.5 },
+          { name: 'keywords', weight: 2 },
           { name: 'content', weight: 1 }
         ],
         includeMatches: true,

@@ -18,7 +18,7 @@
   <li class="column-item">
     <div class="col-line">
       <span class="perm" aria-hidden="true">drwxr-xr-x</span>
-      <span class="fdate">{{ .Date.Format "2006-01-02" }}</span>
+      <span class="fdate">{{ partial "fdate.html" . }}</span>
       <a class="entry" href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
       <span class="count">{{ len (where site.RegularPages "Params.column" .File.ContentBaseName) }} posts</span>
     </div>

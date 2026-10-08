@@ -5,11 +5,12 @@
 {{- dict
   "title" ($p.Title | markdownify | plainify)
   "href" ($p.RelPermalink)
-  "date" ($p.Date.Format "2006-01-02")
+  "date" (partial "fdate.html" $p)
   "section" ($p.Section)
   "description" ($p.Params.description | default "")
   "tags" ($p.Params.tags | default (slice))
   "categories" ($p.Params.categories | default (slice))
+  "keywords" ($p.Params.keywords | default (slice))
   "content" ($p.Content | plainify | htmlUnescape | replaceRE "\\s+" " " | chomp)
 | jsonify -}}
 {{- end -}}

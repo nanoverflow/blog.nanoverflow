@@ -1,8 +1,7 @@
 ---
 title: Win32 duilib tutorial
-date: '2026-10-03'
-aliases:
-  - /post/2026/10/03/win32-duilib-tutorial/
+date: 2026-10-01
+date_precision: month
 categories:
   - Example
 tags:

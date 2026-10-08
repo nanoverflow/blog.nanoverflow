@@ -20,7 +20,7 @@
   <li>
     <span class="cnum" aria-hidden="true">{{ printf "%02d" (add $i 1) }}</span>
     <span class="perm" aria-hidden="true">-rw-r--r--</span>
-    <span class="fdate">{{ $p.Date.Format "2006-01-02" }}</span>
+    <span class="fdate">{{ partial "fdate.html" $p }}</span>
     <a class="entry" href="{{ $p.RelPermalink }}">{{ $p.Title | markdownify }}</a>
   </li>
   {{ else }}

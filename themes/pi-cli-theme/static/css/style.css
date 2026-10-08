@@ -249,6 +249,7 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 }
 .search-input::placeholder { color: var(--dim); }
 .search-input::-webkit-search-cancel-button { -webkit-appearance: none; }
+.meta-item .kw { color: var(--muted); }
 .search-status { margin: 0.6rem 0 0.2rem; }
 .search-results .search-desc { color: var(--muted); font-size: 0.88em; flex-basis: 100%; }
 .search-results mark { background: var(--bg-blue); color: var(--accent); padding: 0 1px; border-radius: 2px; }

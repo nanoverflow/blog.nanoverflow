@@ -10,10 +10,11 @@
     <h1 class="article-title">{{ .Title | markdownify }}</h1>
     <div class="meta">
       {{ with .Params.author }}<span class="meta-item"><span class="meta-label">author:</span> {{ . }}</span>{{ end }}
-      <span class="meta-item"><span class="meta-label">date:</span> <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time></span>
+      {{ if or (not .Date.IsZero) .Params.year }}<span class="meta-item"><span class="meta-label">date:</span> <time datetime="{{ partial "fdate.html" . }}">{{ partial "fdate.html" . }}</time></span>{{ end }}
       {{ with .Params.column }}{{ with site.GetPage (printf "/column/%s" .) }}<span class="meta-item"><span class="meta-label">column:</span> <a href="{{ .RelPermalink }}">{{ .Title }}</a></span>{{ end }}{{ end }}
       {{ with .GetTerms "categories" }}<span class="meta-item"><span class="meta-label">categories:</span> {{ range . }}<a href="{{ .RelPermalink }}">[{{ .LinkTitle }}]</a> {{ end }}</span>{{ end }}
       {{ with .GetTerms "tags" }}<span class="meta-item"><span class="meta-label">tags:</span> {{ range . }}<a href="{{ .RelPermalink }}">[{{ .LinkTitle }}]</a> {{ end }}</span>{{ end }}
+      {{ with .Params.keywords }}<span class="meta-item"><span class="meta-label">keywords:</span> {{ range . }}<span class="kw">[{{ . }}]</span> {{ end }}</span>{{ end }}
     </div>
   </header>
 
