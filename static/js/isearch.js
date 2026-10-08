@@ -2,11 +2,15 @@
  * In-page find (vim style) for pi-cli-theme.
  *
  * On content pages (Hugo Kind "page": posts, columns, about — the flag comes
- * from the data-content-page attribute), "/" or "\" opens a find cmdline above the
- * status bar: case-insensitive substring match over the main content, all hits
- * wrapped in <mark class="isearch">, enter/n jumps to the next hit, N to the
- * previous, esc closes. Elsewhere "/" or "\" jumps to the global search page, and on
- * /search/ itself it focuses the query input.
+ * from the data-content-page attribute), "/" or "\" opens a find cmdline above
+ * the status bar: Ctrl+F-grade case-insensitive substring search over the main
+ * content. Matches may span inline elements (e.g. G<code>UI</code>): the text
+ * of all nodes is concatenated, hits are located in the joined string, then
+ * wrapped in <mark class="isearch"> element-by-element; a single hit may
+ * therefore consist of several adjacent <mark>s that navigate as one.
+ * enter/↓ jumps to the next hit, Shift+enter/N/↑ to the previous, esc closes.
+ * Elsewhere "/" or "\" jumps to the global search page, and on /search/
+ * itself it focuses the query input.
  */
 (function () {
   'use strict';
@@ -16,7 +20,8 @@
   var SEARCH_URL = (script && script.getAttribute('data-search-url')) || '/search/';
 
   var bar = null, input = null, countEl = null;
-  var marks = [];
+  var hits = [];       // [{ marks: [mark…] }]
+  var allMarks = [];   // flat, for unwrapping
   var current = -1;
   var debounceTimer = null;
   var open = false;
@@ -46,7 +51,7 @@
 
     var keys = document.createElement('span');
     keys.className = 'find-keys dim';
-    keys.textContent = 'enter next · N prev · esc close';
+    keys.textContent = 'enter or ↓ next · ↑ prev · esc close';
 
     var closeBtn = document.createElement('button');
     closeBtn.className = 'status-btn';
@@ -70,6 +75,12 @@
       if (e.key === 'Enter') {
         e.preventDefault();
         go(e.shiftKey ? -1 : 1);
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        go(1);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        go(-1);
       }
     });
   }
@@ -91,22 +102,18 @@
   }
 
   function clearMarks() {
-    marks.forEach(function (m) {
+    allMarks.forEach(function (m) {
       var p = m.parentNode;
       if (!p) return;
       p.replaceChild(document.createTextNode(m.textContent), m);
       p.normalize();
     });
-    marks = [];
+    allMarks = [];
+    hits = [];
     current = -1;
   }
 
-  function highlight(q) {
-    clearMarks();
-    if (q.length < 2) { countEl.textContent = ''; return; }
-    var root = document.querySelector('main.terminal');
-    if (!root) return;
-
+  function collectTextNodes(root) {
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode: function (n) {
         var p = n.parentNode;
@@ -116,46 +123,80 @@
         return NodeFilter.FILTER_ACCEPT;
       }
     });
-
     var nodes = [];
     var n;
     while ((n = walker.nextNode())) nodes.push(n);
+    return nodes;
+  }
 
-    var ql = q.toLowerCase();
+  function highlight(q) {
+    clearMarks();
+    if (!q.length) { countEl.textContent = ''; return; }
+    var root = document.querySelector('main.terminal');
+    if (!root) return;
+
+    var nodes = collectTextNodes(root);
+
+    /* join all text and remember which node each character belongs to */
+    var joined = '';
+    var owner = []; // owner[i] = { node, offset } for joined[i]
     nodes.forEach(function (node) {
-      var text = node.nodeValue;
-      var lower = text.toLowerCase();
-      if (lower.indexOf(ql) === -1) return;
-      var frag = document.createDocumentFragment();
-      var pos = 0;
-      var idx = lower.indexOf(ql);
-      while (idx !== -1) {
-        if (idx > pos) frag.appendChild(document.createTextNode(text.slice(pos, idx)));
-        var m = document.createElement('mark');
-        m.className = 'isearch';
-        m.textContent = text.slice(idx, idx + q.length);
-        frag.appendChild(m);
-        marks.push(m);
-        pos = idx + q.length;
-        idx = lower.indexOf(ql, pos);
-      }
-      if (pos < text.length) frag.appendChild(document.createTextNode(text.slice(pos)));
-      node.parentNode.replaceChild(frag, node);
+      var t = node.nodeValue;
+      joined += t;
+      for (var i = 0; i < t.length; i++) owner.push({ node: node, offset: i });
     });
 
+    /* locate hits in the joined string */
+    var lower = joined.toLowerCase();
+    var ql = q.toLowerCase();
+    var ranges = [];
+    var idx = lower.indexOf(ql);
+    while (idx !== -1) {
+      ranges.push({ start: idx, end: idx + q.length });
+      idx = lower.indexOf(ql, idx + 1);
+    }
+    if (!ranges.length) { countEl.textContent = 'no matches'; return; }
+
+    /* wrap hits right-to-left so earlier offsets stay valid while splitting */
+    for (var r = ranges.length - 1; r >= 0; r--) {
+      var hit = ranges[r];
+
+      /* group the hit's characters into per-node segments */
+      var segs = [];
+      for (var i = hit.start; i < hit.end; i++) {
+        var o = owner[i];
+        var last = segs[segs.length - 1];
+        if (last && last.node === o.node && last.end === o.offset) last.end = o.offset + 1;
+        else segs.push({ node: o.node, start: o.offset, end: o.offset + 1 });
+      }
+
+      var hitMarks = [];
+      segs.forEach(function (s) {
+        var m = document.createElement('mark');
+        m.className = 'isearch';
+        m.textContent = s.node.nodeValue.slice(s.start, s.end);
+        var tail = s.node.splitText(s.end);
+        s.node.parentNode.insertBefore(m, tail);
+        hitMarks.push(m);
+        allMarks.push(m);
+      });
+      hits.unshift({ marks: hitMarks });
+    }
+
     current = -1;
-    if (marks.length) go(1);
-    else countEl.textContent = 'no matches';
+    go(1);
   }
 
   function go(dir) {
-    if (!marks.length) return;
-    if (current >= 0 && marks[current]) marks[current].classList.remove('current');
-    current = (current + dir + marks.length) % marks.length;
-    var m = marks[current];
-    m.classList.add('current');
-    countEl.textContent = (current + 1) + '/' + marks.length;
-    m.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    if (!hits.length) return;
+    if (current >= 0 && hits[current]) {
+      hits[current].marks.forEach(function (m) { m.classList.remove('current'); });
+    }
+    current = (current + dir + hits.length) % hits.length;
+    var h = hits[current];
+    h.marks.forEach(function (m) { m.classList.add('current'); });
+    countEl.textContent = (current + 1) + '/' + hits.length;
+    h.marks[0].scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
   document.addEventListener('keydown', function (e) {
