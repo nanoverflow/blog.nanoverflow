@@ -78,8 +78,11 @@ html[data-theme="light"] {
   --pi-blue: #4f8eb3;
   --pi-yellow: #eab65d;
 
-  --mono: "JetBrains Mono", "Cascadia Code", "Fira Code", ui-monospace,
-          "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --mono: "JetBrains Mono", "Cascadia Code", Consolas, "Fira Code", ui-monospace,
+          "SF Mono", Menlo, "Liberation Mono",
+          "Sarasa Mono SC", "Sarasa Gothic SC",
+          "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "PingFang SC",
+          "Noto Sans SC", monospace;
 }
 
 * { box-sizing: border-box; }
