@@ -7,23 +7,40 @@ disqusShortname: ""
 ignoreFiles: ["_cache$"]
 footnotereturnlinkcontents: "↩"
 
+outputFormats:
+  search:
+    mediaType: "application/json"
+    baseName: "searchindex"
+    isPlainText: true
+    notAlternative: true
+
+outputs:
+  home: ["HTML", "RSS", "search"]
+
 permalinks:
   post: "/post/:year/:slug/"
+  column: "/column/:year/:slug/"
 
 menu:
   main:
     - name: Home
       url: ""
       weight: 1
-    - name: About
-      url: "about/"
-      weight: 2
     - name: Categories
       url: "categories/"
+      weight: 2
+    - name: Columns
+      url: "column/"
       weight: 3
     - name: Tags
       url: "tags/"
       weight: 4
+    - name: Search
+      url: "search/"
+      weight: 5
+    - name: About
+      url: "about/"
+      weight: 6
 
 params:
   description: "NaNOverflow's blog"

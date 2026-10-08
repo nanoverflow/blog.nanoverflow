@@ -7,9 +7,10 @@
 
 <div class="prompt-line">{{ partial "prompt.html" . }} <span class="cmd">ls -t</span></div>
 
+{{ $posts := where (where .Site.RegularPages "Section" "!=" "") "Section" "ne" "column" }}{{/* exclude column pages: they are series, not articles */}}
 <ul class="file-list">
-  <li class="total dim">total {{ len (where .Site.RegularPages "Section" "!=" "") }}</li>
-  {{ range (where .Site.RegularPages "Section" "!=" "") }}
+  <li class="total dim">total {{ len $posts }}</li>
+  {{ range $posts }}
   <li>
     <span class="perm" aria-hidden="true">-rw-r--r--</span>
     <span class="fdate">{{ .Date.Format "2006-01-02" }}</span>

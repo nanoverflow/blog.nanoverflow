@@ -1,0 +1,22 @@
+{{ define "main" }}
+<div class="prompt-line">
+  {{ partial "prompt.html" . }} <span class="cmd">grep -ri</span>
+  <input id="search-input" class="search-input" type="search"
+         placeholder="&quot;pattern&quot;" autocomplete="off" autocapitalize="off"
+         spellcheck="false" autofocus aria-label="search query">
+</div>
+
+<div class="search-status dim" id="search-status">loading searchindex.json …</div>
+
+<ul class="file-list search-results" id="search-results" aria-live="polite"></ul>
+
+<p class="search-hint dim">
+  fuzzy full-text search via fuse.js &middot; <kbd>&crarr;</kbd> opens first hit &middot;
+  <kbd>esc</kbd> clears &middot; <kbd>/</kbd> or <kbd>\</kbd> focuses here &middot; on articles <kbd>/</kbd> <kbd>\</kbd> find in page
+</p>
+
+<div class="prompt-line idle">{{ partial "prompt.html" . }} <span class="cursor" aria-hidden="true">&#9608;</span></div>
+
+<script src="{{ "js/fuse.min.js" | relURL }}" defer></script>
+<script src="{{ "js/search.js" | relURL }}" id="search-js" defer data-index="{{ "searchindex.json" | relURL }}"></script>
+{{ end }}

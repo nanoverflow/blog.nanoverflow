@@ -1,0 +1,9 @@
+{{/*
+  Site-level override of the theme's foot_custom.html hook.
+  "/" or "\" on content pages (Hugo Kind "page": posts, columns, about) opens
+  the in-page find cmdline (static/js/isearch.js); elsewhere it jumps to
+  /search/, and on /search/ itself it focuses the query input.
+*/}}
+<script src="{{ "js/isearch.js" | relURL }}" id="isearch-js" defer
+        data-content-page="{{ if eq .Kind "page" }}true{{ else }}false{{ end }}"
+        data-search-url="{{ "/search/" | relURL }}"></script>

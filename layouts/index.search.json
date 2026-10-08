@@ -1,0 +1,16 @@
+{{- /* Search index for Fuse.js: all regular pages (search page excluded via build.list=never). */ -}}
+[
+{{- range $i, $p := site.RegularPages -}}
+{{- if gt $i 0 -}},{{- end -}}
+{{- dict
+  "title" ($p.Title | markdownify | plainify)
+  "href" ($p.RelPermalink)
+  "date" ($p.Date.Format "2006-01-02")
+  "section" ($p.Section)
+  "description" ($p.Params.description | default "")
+  "tags" ($p.Params.tags | default (slice))
+  "categories" ($p.Params.categories | default (slice))
+  "content" ($p.Content | plainify | htmlUnescape | replaceRE "\\s+" " " | chomp)
+| jsonify -}}
+{{- end -}}
+]

@@ -1,0 +1,32 @@
+{{ define "main" }}
+<div class="prompt-line">{{ partial "prompt.html" . }} <span class="cmd">cat column/{{ with .File }}{{ .LogicalName }}{{ else }}column.md{{ end }}</span></div>
+
+<h1 class="page-title">{{ .Title | markdownify }}</h1>
+
+{{ with .Content }}
+<div class="page-content">
+{{ . }}
+</div>
+{{ end }}
+
+{{ $col := .File.ContentBaseName }}
+{{ $posts := (where site.RegularPages "Params.column" $col).ByWeight }}
+
+<div class="prompt-line">{{ partial "prompt.html" . }} <span class="cmd">ls column/{{ $col }}/</span></div>
+
+<ul class="file-list">
+  <li class="total dim">total {{ len $posts }}</li>
+  {{ range $i, $p := $posts }}
+  <li>
+    <span class="cnum" aria-hidden="true">{{ printf "%02d" (add $i 1) }}</span>
+    <span class="perm" aria-hidden="true">-rw-r--r--</span>
+    <span class="fdate">{{ $p.Date.Format "2006-01-02" }}</span>
+    <a class="entry" href="{{ $p.RelPermalink }}">{{ $p.Title | markdownify }}</a>
+  </li>
+  {{ else }}
+  <li class="dim">no articles yet — hugo new post/xxxx.md, then set column: {{ $col }} in front matter</li>
+  {{ end }}
+</ul>
+
+<div class="prompt-line idle">{{ partial "prompt.html" . }} <span class="cursor" aria-hidden="true">&#9608;</span></div>
+{{ end }}

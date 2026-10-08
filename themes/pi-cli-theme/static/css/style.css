@@ -227,6 +227,65 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .file-list .entry:hover::before { content: "\276F "; color: var(--accent); }
 .count { margin-left: 4px; }
 
+/* column (专栏) listings: numbered series + column overview */
+.cnum { color: var(--dim); min-width: 3ch; }
+.file-list .column-item { display: block; padding: 4px 0; }
+.file-list .column-item .col-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 14px; }
+.file-list .column-desc { color: var(--dim); margin: 1px 0 2px; }
+
+/* search (grep-style prompt + fuse.js results) */
+.search-input {
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: var(--accent);
+  font: inherit;
+  width: 26ch;
+  max-width: 60vw;
+  caret-color: var(--accent);
+}
+.search-input::placeholder { color: var(--dim); }
+.search-input::-webkit-search-cancel-button { -webkit-appearance: none; }
+.search-status { margin: 0.6rem 0 0.2rem; }
+.search-results .search-desc { color: var(--muted); font-size: 0.88em; flex-basis: 100%; }
+.search-results mark { background: var(--bg-blue); color: var(--accent); padding: 0 1px; border-radius: 2px; }
+.search-hint { margin: 1rem 0 0; }
+
+/* in-page find cmdline (vim-style, sits above the status bar) */
+.find-bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(30px + 12px); /* above .status-bar (min-height 30px) */
+  z-index: 20;               /* above status bar (10), below toc sheet (30) */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(88ch, 92vw);
+  padding: 7px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+}
+.find-bar[hidden] { display: none; }
+.find-prompt { color: var(--green); font-weight: 700; }
+.find-input {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  font: inherit;
+  min-width: 10ch;
+}
+.find-input::placeholder { color: var(--dim); }
+.find-count { white-space: nowrap; }
+.find-keys { white-space: nowrap; }
+@media (max-width: 640px) { .find-keys { display: none; } }
+mark.isearch { background: var(--bg-blue); color: var(--accent); padding: 0 1px; border-radius: 2px; }
+mark.isearch.current { background: var(--accent); color: var(--bg); }
+
 .page-title {
   color: var(--yellow);
   font-size: 1.35rem;

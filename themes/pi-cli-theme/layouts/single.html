@@ -11,6 +11,7 @@
     <div class="meta">
       {{ with .Params.author }}<span class="meta-item"><span class="meta-label">author:</span> {{ . }}</span>{{ end }}
       <span class="meta-item"><span class="meta-label">date:</span> <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time></span>
+      {{ with .Params.column }}{{ with site.GetPage (printf "/column/%s" .) }}<span class="meta-item"><span class="meta-label">column:</span> <a href="{{ .RelPermalink }}">{{ .Title }}</a></span>{{ end }}{{ end }}
       {{ with .GetTerms "categories" }}<span class="meta-item"><span class="meta-label">categories:</span> {{ range . }}<a href="{{ .RelPermalink }}">[{{ .LinkTitle }}]</a> {{ end }}</span>{{ end }}
       {{ with .GetTerms "tags" }}<span class="meta-item"><span class="meta-label">tags:</span> {{ range . }}<a href="{{ .RelPermalink }}">[{{ .LinkTitle }}]</a> {{ end }}</span>{{ end }}
     </div>
