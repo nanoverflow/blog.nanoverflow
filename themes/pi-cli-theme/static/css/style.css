@@ -80,9 +80,13 @@ html[data-theme="light"] {
 
   --mono: "JetBrains Mono", "Cascadia Code", Consolas, "Fira Code", ui-monospace,
           "SF Mono", Menlo, "Liberation Mono",
-          "Sarasa Mono SC", "Sarasa Gothic SC",
+          "Sarasa Mono SC", "Sarasa Gothic SC", "Noto Sans Mono CJK SC",
+          monospace,
+          /* CJK glyphs fall back here per-character; must stay AFTER the
+             generic monospace or Android (which has Noto Sans CJK but no
+             Latin mono fonts above) renders the whole page proportional */
           "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "PingFang SC",
-          "Noto Sans SC", monospace;
+          "Noto Sans SC";
 }
 
 * { box-sizing: border-box; }
@@ -552,10 +556,10 @@ details.toc-panel .toc { margin-top: 8px; }
 }
 .status-btn:hover { color: var(--accent); border-color: var(--border-accent); }
 
-/* the 目录 button only where the fixed rail is hidden (<1220px) */
-.toc-open { display: none; }
+/* the 目录 + search buttons only where the fixed rail is hidden (<1220px) */
+.toc-open, .find-open { display: none; }
 @media (max-width: 1219.98px) {
-  .toc-open { display: inline-block; }
+  .toc-open, .find-open { display: inline-block; }
 }
 
 /* outline bottom sheet */
@@ -646,9 +650,9 @@ kbd {
 
   .terminal { padding: 1.2rem 1rem 1.6rem; }
 
-  /* ls -1: filenames only */
-  .fdate, .file-list .perm { display: none; }
-  .file-list li { padding: 5px 0; gap: 0 8px; }
+  /* keep the date, drop only the perms string */
+  .file-list .perm { display: none; }
+  .file-list li { padding: 5px 0; gap: 0 10px; }
 
   /* long prompts wrap cleanly */
   .cmd, .prompt { overflow-wrap: anywhere; }
@@ -679,7 +683,7 @@ kbd {
   .status-bar { gap: 8px; font-size: 11.5px; }
   .status-bar .status-center { display: none; }
   .status-bar .status-right > span { display: none; }
-  .toc-open, .theme-toggle { padding: 6px 10px; }  /* equal touch targets, equal height */
+  .toc-open, .find-open, .theme-toggle { padding: 6px 10px; }  /* equal touch targets, equal height */
 }
 
 @media (prefers-reduced-motion: reduce) {

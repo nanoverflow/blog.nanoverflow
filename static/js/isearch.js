@@ -199,6 +199,10 @@
     h.marks[0].scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
+  /* status-bar "/ search" button (no keyboard on touch devices): same as pressing "/" */
+  var findBtn = document.getElementById('find-open');
+  if (findBtn) { findBtn.addEventListener('click', function () { openFind(); }); }
+
   document.addEventListener('keydown', function (e) {
     /* "/" or "\" — route: focus global search input > in-page find > global search page */
     if ((e.key === '/' || e.key === '\\') && !e.ctrlKey && !e.metaKey && !e.altKey) {

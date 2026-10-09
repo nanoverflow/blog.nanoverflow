@@ -12,6 +12,10 @@
     {{ if .Store.Get "hasToc" }}
     <button class="status-btn toc-open" id="toc-open" type="button" aria-haspopup="dialog" aria-controls="toc-sheet" aria-expanded="false" aria-label="open outline">&#9776; TOC</button>
     {{ end }}
+    {{/* in-page find, same routing as "/" in isearch.js: content pages only, not on /search/ itself */}}
+    {{ if and (eq .Kind "page") (ne .RelPermalink ("/search/" | relURL)) }}
+    <button class="status-btn find-open" id="find-open" type="button" aria-label="find in page" title="find in page">/ search</button>
+    {{ end }}
     <button class="theme-toggle" id="theme-toggle" type="button" aria-label="toggle color theme" title="toggle theme (like pi's light/dark)">
       &#9684; <span id="theme-label">dark</span>
     </button>
