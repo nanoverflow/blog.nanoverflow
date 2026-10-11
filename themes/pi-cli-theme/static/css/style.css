@@ -72,6 +72,43 @@ html[data-theme="light"] {
   --scrollbar-thumb-hover: #96a0a4;
 }
 
+/* CJK-only alias built from LOCAL sans (黑体) fonts. Because of the
+   unicode-range it claims CJK glyphs only — Latin keeps falling through to
+   the mono fonts above — so it is safe to put it BEFORE the generic
+   `monospace`. That placement matters: on Windows Chromium, once
+   per-character matching reaches a generic keyword, the glyph is claimed by
+   the browser's fixed-width default — SimSun (宋体) on zh-CN Windows — and
+   every family listed AFTER `monospace` is never tried. That is why CJK used
+   to render serif on Windows. The webfont "Noto Sans SC" (head_custom.html)
+   stays after `monospace` on purpose: its chunk set includes a latin chunk,
+   so moving it up would hijack Latin rendering on systems with no local
+   Latin mono fonts (Android). */
+@font-face {
+  font-family: "CJK Sans";
+  font-weight: 400;
+  src: local("PingFang SC"),
+       local("Microsoft YaHei"), local("微软雅黑"), local("Microsoft YaHei UI"),
+       local("Noto Sans CJK SC"), local("Source Han Sans SC"),
+       local("Source Han Sans CN"), local("Noto Sans SC"),
+       local("WenQuanYi Micro Hei");
+  unicode-range: U+2E80-2EFF, U+3000-303F, U+3040-30FF, U+3130-318F,
+                 U+31C0-31EF, U+31F0-31FF, U+3200-32FF, U+3400-4DBF,
+                 U+4E00-9FFF, U+A960-A97F, U+AC00-D7AF, U+F900-FAFF,
+                 U+FE30-FE4F, U+FF00-FFEF;
+}
+@font-face {
+  font-family: "CJK Sans";
+  font-weight: 600 700; /* real bold faces; synthesises from 400 if missing */
+  src: local("PingFang SC Semibold"), local("PingFang SC Medium"),
+       local("Microsoft YaHei Bold"), local("MicrosoftYaHei-Bold"),
+       local("Noto Sans CJK SC Bold"), local("SourceHanSansSC-Bold"),
+       local("Noto Sans SC Bold"), local("WenQuanYi Micro Hei");
+  unicode-range: U+2E80-2EFF, U+3000-303F, U+3040-30FF, U+3130-318F,
+                 U+31C0-31EF, U+31F0-31FF, U+3200-32FF, U+3400-4DBF,
+                 U+4E00-9FFF, U+A960-A97F, U+AC00-D7AF, U+F900-FAFF,
+                 U+FE30-FE4F, U+FF00-FFEF;
+}
+
 :root {
   /* Jy brand (fixed across themes): J = coral + blue, y = yellow */
   --coral: #e48a7a;
@@ -81,6 +118,9 @@ html[data-theme="light"] {
   --mono: "JetBrains Mono", "Cascadia Code", Consolas, "Fira Code", ui-monospace,
           "SF Mono", Menlo, "Liberation Mono",
           "Sarasa Mono SC", "Sarasa Gothic SC", "Noto Sans Mono CJK SC",
+          /* CJK-only @font-face alias above — must precede `monospace`, see
+             the comment on the @font-face block */
+          "CJK Sans",
           monospace,
           /* CJK glyphs fall back here per-character; must stay AFTER the
              generic monospace or Android (which has Noto Sans CJK but no
