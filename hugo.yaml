@@ -20,6 +20,9 @@ outputs:
 permalinks:
   post: "/post/:year/:slug/"
   column: "/column/:year/:slug/"
+  # standalone pages (content/stash/*.md): flat URLs like /cs/ /pic/ —
+  # rendered but never listed (see cascade in content/stash/_index.md)
+  stash: "/:slugorfilename/"
 
 menu:
   main:
